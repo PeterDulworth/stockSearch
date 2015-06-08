@@ -1,0 +1,27 @@
+<div class="container" ng-init="checkRouteParams()">
+    
+    <h1 class="blue_header">Query</h1> <br />
+    <div class="row">
+        <div class="form-inline">
+            <div class="form-group col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-database text-muted"></i>
+                    </span>
+                    <input type="text" class="form-control" ng-model="stock_query" placeholder="Stock Symbol">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success" ng-click="refresh_data()">Search</button>
+            <button type="submit" class="btn btn-info pull-right" ng-click="refresh_data()">Refresh</button>
+        </div>
+    </div>
+    
+    <hr />
+     
+    <progressbar max="max" ng-show="loading" value="dynamic" type="success"></progressbar>
+ 
+    <div class="center" id="resultslist"></div>
+    <div id="chart_div" class="graph"></div>
+    
+    <div id="spinner_i" ng-show="loading"><img class="spinner_c resize" src="images/loading_2.gif" /></div>
+</div>      

@@ -1,0 +1,23 @@
+<div class="container">
+    <h1 class="blue_header">Watch List</h1>
+    
+    <div class="row">
+        <span class="col-xs-4">
+            <label>
+                <strong><h3>Add Stock to Watchlist</h3></strong>
+            </label>
+        </span>
+    </div>
+    
+    <div class="row">
+        <div class="form-inline">
+            <div class="form-group col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                    <input type="text" class="form-control" ng-model="addToWatchlist" placeholder="Stock Symbol" id="addToWatchlist">
+            </div>
+            <button type="submit" class="btn btn-success" ng-click="addToWatchlist(); refresh_data()">Add</button>
+            <button type="submit" class="btn btn-info pull-right" ng-click="refresh_data()">Refresh</button>
+        </div>
+    </div>
+    
+    <br /><hr />
+</div>
