@@ -1,4 +1,4 @@
-angular.module('stockSearch').controller('queryController', ['$scope', '$http', '$filter', '$routeParams', '$timeout', function ($scope, $http, $filter, $routeParams, $timeout) {
+angular.module('stockSearch').controller('queryController', ['$scope', '$http', '$filter', '$routeParams', '$timeout', '$compile', function ($scope, $http, $filter, $routeParams, $timeout, $compile) {
     
     'use strict';
     
@@ -18,6 +18,9 @@ angular.module('stockSearch').controller('queryController', ['$scope', '$http', 
     $scope.responseJSON_date = [];
     $scope.responseJSON_hist = [];
     $scope.year_range = [];
+    $scope.subChart = true;
+    $scope.data = [];
+    $scope.data[0] = ['date', 'Price'];
 
     $scope.formattedStockName = function () {
         return $filter('uppercase')($scope.stock_query);
@@ -65,112 +68,83 @@ angular.module('stockSearch').controller('queryController', ['$scope', '$http', 
         return year + ', ' + month + ', ' + day;
     };
     
-//    $scope.drawCurveTypes = function () {
-//        document.getElementById("chart_div").style.visibility = 'visible';
-//        $scope.data = new google.visualization.DataTable();
-//        $scope.data.addColumn('date', 'X');
-//        $scope.data.addColumn('number', '1');
-//        $scope.data.addColumn('number', '2');
-//
-////        for (var j = 0; j < $scope.responseJSON_hist.length; j++) {
-////            for (var k = 0; k < $scope.response[j].length; k++) {
-////                $scope.data.addRow([new Date($scope.formatDate($scope.responseJSON_hist[j][k].Date)), $scope.responseJSON_hist[j][k].Adj_Close, $scope.responseJSON_hist[j][k].Low]);    
-////            }
-////        }
-////        
-////        $scope.data.addRows([
-////            [new Date(2000, 1, 01), 10, 12],
-////            [new Date(2000, 1, 03), 12, 14],
-////            [new Date(2000, 1, 05), 14, 16]
-////        ]);
-//        
-////        $scope.data.addRows([
-////            [new Date(1977, 2, 28), 1, 1],
-////            [new Date(1962, 7, 5), 1, 2],
-////            [new Date(1983, 11, 17), 1, 3]
-////        ]);
-//
-//        $scope.options = { 
-////            title: 'Average Temperatures and Daylight in Iceland Throughout the Year',
-////            titleTextStyle: {
-////                color: 'rgb(72,179,216)',
-////                fontSize: 18,
-////                bold: false
-////            },
-////            width: 900,
-////            height: 500,
-//            hAxis: {
-//                format: 'MMM, \'yy',
-//                gridlines: {count: 3}
-//            },
-////          vAxis: {
-////              gridlines: {color: 'none'},
-////              minValue: 0
-////          },
-//            legend: { position: 'bottom', alignment: 'center' },
-////            series: {
-////                0: {curveType: 'function'},
-////                1: {curveType: 'function'}
-////            },
-//            colors: ['#c30d0d', 'rgb(72,179,216)']
-////            trendlines: {
-////                0: {
-////                    type: 'linear',
-////                    color: 'green',
-////                    lineWidth: 3,
-////                    opacity: 0.3,
-////                    showR2: true,
-////                    visibleInLegend: false
-////                },
-////                1: {
-////                    type: 'linear',
-////                    color: 'green',
-////                    lineWidth: 3,
-////                    opacity: 0.3,
-////                    showR2: true,
-////                    visibleInLegend: false
-////                }
-////            }
-//        };
-//
-//        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-//        chart.draw($scope.data, google.charts.Line.convertOptions($scope.options));
-//    };
-    
-    $scope.drawBasics = function () {
-
-      var data = new google.visualization.DataTable();
-      data.addColumn('number', 'X');
-      data.addColumn('number', 'Dogs');
-
-      data.addRows([
-        [0, 0],   [1, 10],  [2, 23],  [3, 17],  [4, 18],  [5, 9],
-        [6, 11],  [7, 27],  [8, 33],  [9, 40],  [10, 32], [11, 35],
-        [12, 30], [13, 40], [14, 42], [15, 47], [16, 44], [17, 48],
-        [18, 52], [19, 54], [20, 42], [21, 55], [22, 56], [23, 57],
-        [24, 60], [25, 50], [26, 52], [27, 51], [28, 49], [29, 53],
-        [30, 55], [31, 60], [32, 61], [33, 59], [34, 62], [35, 65],
-        [36, 62], [37, 58], [38, 55], [39, 61], [40, 64], [41, 65],
-        [42, 63], [43, 66], [44, 67], [45, 69], [46, 69], [47, 70],
-        [48, 72], [49, 68], [50, 66], [51, 65], [52, 67], [53, 70],
-        [54, 71], [55, 72], [56, 73], [57, 75], [58, 70], [59, 68],
-        [60, 64], [61, 60], [62, 65], [63, 67], [64, 68], [65, 69],
-        [66, 70], [67, 72], [68, 75], [69, 80]
-      ]);
-
-      var options = {
-        hAxis: {
-          title: 'Time'
-        },
-        vAxis: {
-          title: 'Popularity'
+    $scope.drawChart = function () {
+        var n = 1;
+        for (var j = 0; j < $scope.responseJSON_hist.length; j++) {
+            $scope.data[n] = [];
+            for (var k = 0; k < $scope.responseJSON_hist[j].length; k++) { 
+                $scope.data[n] = [];
+                $scope.data[n][0] = $scope.responseJSON_hist[j][k].Date;
+                $scope.data[n][1] = $scope.responseJSON_hist[j][k].High;
+                n++;
+            }
         }
-      };
-
-      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-
-      chart.draw(data, options);
-    }
+        
+        console.log($scope.data);
+        document.getElementById("chart").style.visibility = 'visible';
+        $scope.chart = c3.generate({
+            bindto: '#chart',
+            data: {
+                x: 'date',
+                rows: $scope.data,
+            },
+            axis: {
+                x: {
+                    type: 'timeseries',
+                    tick: {
+                        format: '%Y'
+                    }
+                },
+                y: {
+                    label: {
+                        text: 'Price',
+                        position: 'outer-middle'
+                    }
+                }
+            },
+            size: {
+                width: 900,
+                height: 500
+            }, 
+            interaction: {
+                enabled: true
+            },
+            legend: {
+                hide: true
+            },
+            point: {
+                show: false
+            },
+            tooltip: {
+                format: {
+                    title: function (d) { 
+                        var format_1 = d3.time.format('%b. %e, %Y'); //https://github.com/mbostock/d3/wiki/Time-Formatting
+                        return format_1(d); 
+                    },
+                    value: function (value, ratio, id) {
+                        var format = d3.format('$');
+                        return format(value);
+                        }
+                    }
+            },
+            subchart: {
+                show: $scope.subChart
+            }
+          //color: {
+          //    pattern: ['#1f77b4', '#aec7e8']
+          //}
+        });
+    };
+    
+    $scope.zoom = function () {
+        $scope.chart.zoom.enable(true);
+        $scope.chart.zoom(['2012-01-01', '2013-01-01']);  
+    };
+    
+    $scope.unzoom = function () {
+        $scope.subChart = false;
+        $scope.chart.unzoom();
+    };
     
     $scope.repaint = function (canvas, brush) {
         document.getElementById(canvas).innerHTML = brush;
@@ -182,33 +156,33 @@ angular.module('stockSearch').controller('queryController', ['$scope', '$http', 
         $scope.out = '';
         $scope.dynamic = 0; // progress bar position
         $scope.max = 3; // max progress bar length
+        $scope.data = [];
+        $scope.data[0] = ['date', 'Price'];
         $scope.repaint('resultslist', $scope.out);
     };
     
     $scope.printResults = function () {
-        $scope.repaint('resultslist', $scope.out);
-        $scope.drawBasics();
+        var output;
+        output = $compile($scope.out)($scope);
+        angular.element(document.getElementById('resultslist')).append(output);
+//        $scope.repaint('resultslist', $scope.out);
     };
     
     $scope.httpSuccess = function () {
-        var length = 0, l = 0;
         console.log($scope.responseJSON_hist);
-        console.log($scope.responseJSON_hist.length);
-        length = $scope.responseJSON_hist.length;
-//        for (l = 0; l < length; l++) {
-//            $scope.responseJSON_sum += $scope.responseJSON_hist[l].length;
-////            console.log($scope.responseJSON_sum);
-//        }
-        $scope.printResults();
-        
+        //$scope.printResults();
+        $scope.drawChart();
+//        $timeout(function () {$scope.drawChart();}, 50);
+
     };
     
     $scope.refresh_data = function () {
         
         $scope.reset_data();
-        $scope.out = '<div class="row"><div class="col-xs-11 col-xs-offset-1"><h1 class="pink_header">' + $scope.formattedStockName() + '</h1></div></div>';
+        $scope.out = '<div class="row"><div class="col-xs-11 col-xs-offset-1"><h1 class="pink_header">' + $scope.formattedStockName() + '<div class="pull-right"><button type="submit" class="btn btn-success" ng-click="zoom()"><i class="fa fa-search-plus"></i></button>&nbsp;<button type="submit" class="btn btn-danger" ng-click="unzoom()"><i class="fa fa-search-minus"></i></button></div></h1></div></div>';
+        $scope.printResults();
         $scope.loading = 3; 
-        document.getElementById("chart_div").style.visibility = 'hidden';
+        document.getElementById("chart").style.visibility = 'hidden';
         
         var get_string = '';
         var year;
@@ -226,24 +200,21 @@ angular.module('stockSearch').controller('queryController', ['$scope', '$http', 
                 console.log($scope.startYear);
                 console.log($scope.endYear);
                 console.log($scope.yearGap);
-                $scope.dynamic++;
-                $scope.loading--;
                 $scope.loading += parseInt($scope.yearGap) - 1;
+                console.log('loading: ' + $scope.loading);
                 $scope.max += parseInt($scope.yearGap) - 1;
                 console.log('Max: ' + $scope.max);
+                $scope.dynamic++;
+                $scope.loading--;
+                
                 $http.get($scope.get_yql_query_hist_start()) // parameters depend on the success of the first ajax request
                     .success(function (responseText_hist_start) {
                         $scope.responseJSON_hist[0] = responseText_hist_start.query.results.quote.reverse();
                         $scope.dynamic++;
                         $scope.loading--;
                        if($scope.loading === 0) {
-                        $scope.httpSuccess();
+                            $scope.httpSuccess();
                         }
-//                        else {
-//                            $timeout(function () {
-//                                $scope.httpSuccess();
-//                            }, 15000)
-//                        }
                     })
                     .error(function (data, status) { 
                         console.log(data);
@@ -257,15 +228,10 @@ angular.module('stockSearch').controller('queryController', ['$scope', '$http', 
                         $scope.responseJSON_hist[i] = responseText_hist.query.results.quote.reverse();
                         $scope.dynamic++;
                         $scope.loading--;
-                        console.log($scope.loading);
+                        console.log('Loading: ' + $scope.loading);
                         if($scope.loading === 0) {
-                        $scope.httpSuccess();
+                            $scope.httpSuccess();
                         }
-//                        else {
-//                            $timeout(function () {
-//                                $scope.httpSuccess();
-//                            }, 15000)
-//                        }
                     })
                     .error(function (data, status) {
                         console.log(data);
@@ -277,14 +243,10 @@ angular.module('stockSearch').controller('queryController', ['$scope', '$http', 
                     $scope.responseJSON_hist[parseInt($scope.yearGap)] = responseText_hist_end.query.results.quote.reverse();
                     $scope.dynamic++;
                     $scope.loading--;
+                    console.log('Loading: ' + $scope.loading);
                     if($scope.loading === 0) {
                         $scope.httpSuccess();
                     }
-//                    else {
-//                        $timeout(function () {
-//                            $scope.httpSuccess();
-//                        }, 15000)
-//                    }
                 })
                 .error(function (data, status) {
                     console.log(data);

@@ -90,5 +90,22 @@ img.resize{
     float: none;
     margin: 0 auto;
     padding: 0;
+    padding-top: 10px;
 /*    border: solid blue 1px;*/
 }
+
+ .tick line{ opacity: 0; }
+/*
+#chart .c3-line-Price {
+  stroke-width: 1px;
+}*/
+
+.btn-primary {
+    background: #ff2587;
+    color: #ffffff;
+}
+
+/*
+g c3-brush {
+    visibility: hidden;
+}*/
