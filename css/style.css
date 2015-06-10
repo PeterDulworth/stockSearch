@@ -100,12 +100,34 @@ img.resize{
   stroke-width: 1px;
 }*/
 
+/*
 .btn-primary {
     background: #ff2587;
     color: #ffffff;
+}
+*/
+
+#progressbar_main {
+    visibility: hidden;
+}
+
+/*
+#backToTop {
+    visibility: hidden;
+    padding: 0;
+}
+*/
+
+#resultslist {
+    padding: 0;
 }
 
 /*
 g c3-brush {
     visibility: hidden;
+}*/
+/*
+
+.info {
+    list-style-type: none;
 }*/

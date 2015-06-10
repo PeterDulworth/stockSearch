@@ -1,12 +1,15 @@
-angular.module('stockSearch').controller('mainController', ['$scope', '$http', '$location', '$compile', function ($scope, $http, $location, $compile) {
+angular.module('stockSearch').controller('mainController', ['$scope', '$http', '$location', '$compile', '$anchorScroll', '$filter', '$timeout', function ($scope, $http, $location, $compile, $anchorScroll, $filter, $timeout) {
     
     'use strict';
     
     $scope.dynamic = 0; // position of progress bar
     $scope.max = 8; // max progress bar length
+    $scope.loaded = false;
     $scope.loading = 0;
     $scope.trueChange = '';
     $scope.counter = 0;
+    $scope.btnName = 'Load Data';
+    $scope.scroll_id = '';
     $scope.responseJSON_nas1 = [];
     $scope.responseJSON_nas2 = [];
     $scope.responseJSON_nas3 = [];
@@ -28,6 +31,19 @@ angular.module('stockSearch').controller('mainController', ['$scope', '$http', '
             "'CLRO','CLFD','CLNT','CLNE','CDTI','CIVBP','CIVB','CHCO','CTXS','CIZN','CZFC','CZWI','CZNC','CTRN','CSCO','CRUS','CPHR','CTAS','CIDM','CINF','CMPR','CMCT','CIFC','CDTX','CHUY','CHDN','CHSCP','CHSCO','CHSCN','CHSCM','CHSCL','IMOS','CNET','CCIH','CNYD','CXDC','CNTF','CSUN','CPGI','CRDI','CREG','CHNR','CMGE','HTHT','CJJD','CNIT','CHLN','HGSH','CHOP','JRJC','CCCR','CCCL','CBPO','CBAK','CAAS','CALI','CADC','CMRX','PLCE','CBNK','CHEV','CHKE','CHMG','CCXI','CHFC','CEMI','CHEKW','CHEK','CHKP','CHFN','CHTR','GTLS','CTHR','HOTRW','HOTR','CYOU','CEVA','KOOL','CERS','CERU','CERN','CERE','CRNT','CPHD','CNTY','CNBKA','CENX','CVCY','CENTA','CENT','CFBK','CETV','CSFL','CEMP','CLTX','CLSN','CBMG','CLLS','CLRBW','CLRB','CLDX','CLDN','CELGZ','CELG','CPXX','CECE','CDW','CDK','CBOE','CNLMW','CNLMU','CNLMR','CNLM','CBFV','CAVM','CVCO','CATYW','CATY','CTRX','CPRX','CASS','CASI','CASY','CWST','CSCD','CACB','CASM','CARV','CRTN','TAST','CRZO','CART','CARO','CLBH','CKEC','CTRE','CECO','CDNA','CATM','CSII','CRME','CFNL','CRDC','CBYL','CARB','CARA','CPST','CAPR','CAPNW','CAPN','CFFN','CLACW','CLACU','CLAC','CPTA','CSWC','CPLP','CCBG','CBF','CPLA','CBNJ','CPHC','CGIX','CSIQ','CAMT','CAC','CAMBW','CAMBU','CAMB','ABCD','CLMT','CALM','CALD','CALA','CFNB','CVGW','CAMP','CSQ','CGO','CHW','CFGE','CCD','CHI','CHY','CLMS','PRSS','CSTE','CZR','CACQ','CDZI','CDNS','CCMP','CA','CHRW','CFFI','BUR','BLDR','BWLD','BSQR','BLMT','BMTC','BRKR','BRKS','BRKL','BRCD','BWEN','BYFC','BVSN','BSFT','BRCM','BCOV','BRID','BLIN','BBNK','BDGE','BBEPP','BBEP','BBRG','BCLI','BLVDW','BLVDU','BLVD','BDBD','EPAY','BPFHW','BPFHP','BPFH','BRDR','BAMM','BNSO','BONA','BOKF','BOJA','WIFI','BOFI','BOBE','BNCN','BPMC','CBDE','BKEPP','BKEP','BLUE','NILE','BHBK','BBLU','BLBD','BCOR','BLMN','ADRU','ADRE','ADRD','ADRA','BKCC','HAWK','BBRY','BLKB','BDE','BBOX','BJRI','BDMS','BEAT','TECH','BOTA','BSPM','BSTC','BBP','BBC','BIOS','BRLI','BPTH','BVXVW','BVXV','BMRN','BLRX','BLFS','BIOL','BIIB','BDSI','BIOD','BCRX','BIOC','BASI','ORPN','BIND','BGFV','BGCP','BGMD','BNFT','BNCL','BLCM','BLPH','BELFB','BELFA','BBBY','BEBE','BBGI','BSF','BECN','BDCV','BCBP','BBCN','BV','BYLK','BYBK','BSET','BBSI','BHACW','BHACU','BHACR','BHAC','TAPR','BZUN','BANR','BWFG','BFIN','OZRK','BOTJ','BKSC','BMRC','BOCH','BKMU','BANFP','BANF','BLDP','BWINB','BWINA','BCPC','BIDU','BEAV','BOSC','BCOM','AXTI','AXGN','AXPWW','AXPW','ACLS','AWRE','CAR','AVGR','AVID','AVNW','AVEO','AVNU','AAVL','AVGO'",
             "'ADP','AGMX','ADSK','ABTL','ADAT','EARS','AUPH','AUDC','ADNC','AUBN','LIFE','ATTU','ATRM','ATRI','ATRC','ATOS','ATML','AFH','AAWW','ATLC','ATNI','ACFC','AAME','AAPC','ATHX','AFCB','ATHN','ATRA','ATAI','ASUR','ASTC','ATRO','ALOT','ASTE','ASFI','ASMB','AZPN','ASML','ASMI','APWC','ASTI','ASCMA','ASND','ASNA','ASBB','PUMP','ARTW','ARTNA','ARWR','AROW','DWAT','ARRS','ARRY','ARQL','ARWAW','ARWAU','ARWAR','ARWA','ARTX','ARMH','ARKR','ARIA','ARIS','ARGS','AGIIL','AGII','ARCC','ARNA','ARDX','ACAT','ACGL','ARCB','RKDA','ABIO','ARCW','ARBR','PETX','ARDM','AUMAW','AUMAU','AUMA','AQXP','APTO','APRI','AREX','AAOI','AMCC','AMAT','AGTC','APDNW','APDN','ARCI','AAPL','AMEH','AINV','APOL','APOG','APIC','ATNY','ABAC','ANTH','ANTE','ATRS','ANSS','ANIK','ANIP','ANGO','ANGI','AMCF','ABCW','ANCB','ALOG','ADI','ANAD','ANAC','AMRS','AFSI','ASYS','AMSGP','AMSG','AMPH','AMKR','FOLD','AMGN','ATLO','ASRVP','ASRV','AMSF','ABCB','CRMT','AMWD','AMSC','AMSWA','ASEI','AMRB','ARCPP','ARCP','ARII','APEI','ANAT','AMNB','AMIC','AETI','ANCI','ACAS','ACSF','MTGEP','MTGE','AGNCP','AGNCB','AGNC','AAL','AMOV','ATAX','ASBI','UHAL','AMED','AMDA','DOX','AMCX','EPAX','AMBA','AMBCW','AMBC','AMZN','AYA','AMRK','AMRN','AMAG','AIMC','ASPS','ALTR','ATEC','SMCP','AOSL','ALNY','AFAM','MDRX','ALLT','ALQA','AMOT','AHPI','ARLP','AHGP','AIQ','AFOP','ALLB','ALGT','ALKS','ALIM','ALGN','ALCO','ALXA','ALXN','ALDX','ALDR','ADHD','ABDC','AMRI','ALSK','AKRX','AKER','AKBA','AKAM','AIXG','AMCN','ATSG','AIRT','AIRM','AGIO','AGYS','AGRX','AGEN','AFFX','AFMD','AEZS','AVAV','AERI','AEPI','AMTX','AEHR','AEGN','AEGR','YPRO','MULT','ADVS','ADXSW','ADXS','AMD','AEIS','AAAP','ADRO','ADTN','ADBE','ADMA','ADEP','AEY','ADUS','ADAP','ADMP','ADMS','ACXM','ACUR','ACTA','ATVI','ACPW','ACTS','ACFN','ACOR','ACNB','ACIW','ACHN','AKAO','ACET','ACRX','VXUP','VXDN','ARAY','ANCX','XLRN','AXDX','ACST','ACAD','ACHC','ACTG','AXAS','ABMD','ABGB','ABY','ABAX','AAON','SHLM','AVHI','EGHT','SIXD','JOBS','DGLD','TWOU','VNET','SRCE','FCCY','FCTY','FLWS','PIH','TFSCW','TFSCU','TFSCR','TFSC'"
     ];
+    $scope.alerts = [];
+    
+    $scope.addAlert = function(type, msg) {
+        $scope.alerts.push({ type: type, msg: msg});
+    };
+
+    $scope.closeAlert = function(index) {
+        $scope.alerts.splice(index, 1);
+    };
+    
+    $scope.formattedJumpName = function () {
+        return $filter('uppercase')($scope.scroll_id);
+    };
     
     $scope.get_query_string_final_nas1 = function () {
         return "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(" + $scope.nasdaq[0] + ")&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
@@ -63,7 +79,59 @@ angular.module('stockSearch').controller('mainController', ['$scope', '$http', '
     console.log($scope.get_query_string_final_nas7());
     console.log($scope.get_query_string_final_nas8());
     
-    $scope.query_with_symbl = function (symbl) {
+    $scope.goToLocation = function(id) { 
+        if($scope.loaded) {
+            if (!document.getElementById(id)) {
+                var msg = '';
+                if($scope.scroll_id === '') {
+                    msg = 'Please enter a stock symbol'
+                    $scope.addAlert('danger', msg); 
+                }
+                else {
+                    msg = 'Symbol "' + $scope.scroll_id + '" could not be found. Please make sure the symbol you entered is correct'
+                    $scope.addAlert('danger', msg); 
+                }
+            }
+            else {
+                var oldHash = $location.hash();
+                var oldColor = String(document.getElementById(id).style.backgroundColor);
+                $location.hash(id);
+                $anchorScroll();
+                $location.hash(oldHash);
+                if(id !== 'top') {
+                    document.getElementById(id).style.backgroundColor = 'rgb(185,222,145)';
+
+                    $timeout(function () {
+                        document.getElementById(id).style.backgroundColor = 'rgb(255,255,255)';
+                    }, 500);
+
+                    $timeout(function () {
+                        document.getElementById(id).style.backgroundColor = 'rgb(185,222,145)';
+                    }, 1000);
+
+                    $timeout(function () {
+                        document.getElementById(id).style.backgroundColor = 'rgb(255,255,255)';
+                    }, 1500);
+
+                    $timeout(function () {
+                        document.getElementById(id).style.backgroundColor = 'rgb(185,222,145)';
+                    }, 2000);
+
+                    $timeout(function () {
+                        document.getElementById(id).style.backgroundColor = 'rgb(255,255,255)';
+                    }, 2500);
+                    $timeout(function () {
+                        document.getElementById(id).style.backgroundColor = oldColor;
+                    }, 3000);
+                }
+            }
+        }
+        else {
+            $scope.addAlert('danger', 'Please Load Data First!');
+        }
+    };
+    
+    $scope.query_with_symbl = function (symbl) {    
         $location.path(symbl);
     };
     
@@ -76,6 +144,7 @@ angular.module('stockSearch').controller('mainController', ['$scope', '$http', '
     };
     
     $scope.reset_data = function () {
+        $scope.btnName = "Refresh";
         $scope.responseJSON_nas1 = [];
         $scope.responseJSON_nas2 = [];
         $scope.responseJSON_nas3 = [];
@@ -97,7 +166,7 @@ angular.module('stockSearch').controller('mainController', ['$scope', '$http', '
         var symbl = '';
         var path = '';
         
-        for (i = 0; i < responseJSON.length; i++) {
+        for (let i = 0; i < responseJSON.length; i++) {
             name = String(responseJSON[i].Name);
             symbl = responseJSON[i].Symbol;
             path = '/query/' + symbl;
@@ -110,11 +179,11 @@ angular.module('stockSearch').controller('mainController', ['$scope', '$http', '
                 $scope.trueChange = String(responseJSON[i].Change).substr(1);
             }
             if (parseFloat($scope.trueChange) > 1.0) { $scope.counter++;
-                $scope.out += '<tr ng-click="query_with_symbl(\'' + path + '\')" class="goodCO"><td>' + name + " (" + responseJSON[i].Symbol + ")</td><td>" + responseJSON[i].EarningsShare + "</td><td>" + responseJSON[i].BookValue + "</td><td>" + responseJSON[i].Change +  "</td></tr>";
+                $scope.out += '<tr id="' + symbl + '" ng-click="query_with_symbl(\'' + path + '\')" class="goodCO"><td>' + name + " (" + responseJSON[i].Symbol + ")</td><td>" + responseJSON[i].EarningsShare + "</td><td>" + responseJSON[i].BookValue + "</td><td>" + responseJSON[i].Change +  "</td></tr>";
                 }                                           
             else { 
                 $scope.counter++;
-                $scope.out += '<tr ng-click="query_with_symbl(\'' + path + '\')"><td>' + name + " (" + responseJSON[i].Symbol + ")</td><td>" + responseJSON[i].EarningsShare + "</td><td>" + responseJSON[i].BookValue + "</td><td>" + responseJSON[i].Change +  "</td></tr>";
+                $scope.out += '<tr id="' + symbl + '" ng-click="query_with_symbl(\'' + path + '\')"><td>' + name + " (" + responseJSON[i].Symbol + ")</td><td>" + responseJSON[i].EarningsShare + "</td><td>" + responseJSON[i].BookValue + "</td><td>" + responseJSON[i].Change +  "</td></tr>";
             }   
         }
         console.log(responseJSON.length);
@@ -148,6 +217,8 @@ angular.module('stockSearch').controller('mainController', ['$scope', '$http', '
         
         $scope.reset_data();
         $scope.loading = 8;
+        $scope.loaded = true;
+        document.getElementById('progressbar_main').style.visibility = 'visible';
         
         $http.get($scope.get_query_string_final_nas1())
             .success(function (responseText_nas1, status) {

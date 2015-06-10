@@ -1,29 +1,37 @@
-<div class="container" ng-init="refresh_data()">
+<!--<div class="container" ng-init="refresh_data()">-->
+<div id="top" class="container">
+    
+    <div class="row">
+        <alert class="col-xs-12" ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{alert.msg}}</alert>
+    </div>
     
     <h1 class="blue_header">Complete Data</h1>
-    
     <div class="row">
         <span class="col-xs-4">
             <label>
-                <strong><h3>Add Stock to Watchlist</h3></strong>
+                <strong><h3>Jump to Stock</h3></strong>
             </label>
         </span>
     </div>
     
     <div class="row">
         <div class="form-inline">
-            <div class="form-group col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                    <input type="text" class="form-control" ng-model="addToWatchlist" placeholder="Stock Symbol" id="addToWatchlist">
-            </div>
-            <button type="submit" class="btn btn-success" ng-click="addToWatchlist(); refresh_data()">Add</button>
-            <button type="submit" class="btn btn-info pull-right" ng-click="refresh_data()">Refresh</button>
+            <form ng-submit="goToLocation(formattedJumpName())">
+                <div class="form-group col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                    <input type="text" class="form-control" ng-model="scroll_id" placeholder="Stock Symbol" tooltip="please load data first" tooltip-placement="bottom" tooltip-trigger="mouseenter" tooltip-enable="!loaded" />
+                </div>
+                <input type="submit" class="btn btn-success" value="Jump"></input>
+                <button type="button" class="btn btn-info pull-right" ng-click="refresh_data()">{{ btnName }}</button>
+            </form>
         </div>
     </div>
     
     <br /><hr />
     
-    <progressbar max="max" value="dynamic" type="success"></progressbar>
+    <div ng-hide="loaded" class="alert alert-info" role="alert"><strong> Welcome to StockSearch! </strong><i class="fa fa-database"></i><ul class="info"><li>Home - current data for all 3033 nasdaq stocks via tha yahoo finance API</li><li>Watchlist - track your favorite stocks (under developement)</li><li>Query - complete historical data for and nasdaq stock</li></ul><strong>Tips <i class="fa fa-lightbulb-o"></i></strong><ul class="info"><li>Click on any stock on the home screen to be automatically redirected to its query page (must load data first) </li></ul></div>
+    
+    <progressbar id="progressbar_main" max="max" value="dynamic" type="success"></progressbar>
     <div id="resultslist"></div>
-    <div id="testlist"></div>
+    <a ng-click="goToLocation('top')" ng-hide="!loaded" class="pull-right" id="backToTop">Back to Top <i class="fa fa-level-up"></i></a>
     <div id="spinner_i" ng-show="loading"><img class="spinner_c resize" src="images/loading_2.gif" /></div>
 </div> 

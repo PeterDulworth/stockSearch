@@ -27,3 +27,7 @@ stockSearch.config(function ($routeProvider) {
         });
     
 });
+
+stockSearch.run(['$anchorScroll', function($anchorScroll) {
+    $anchorScroll.yOffset = ($(window).height())/2;   // always scroll by 50 extra pixels
+}]);

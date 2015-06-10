@@ -12,11 +12,13 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-success" ng-click="refresh_data()">Search</button>
-            <button type="submit" class="btn btn-info pull-right" ng-click="refresh_data()">Refresh</button>
+            <button type="submit" id="queryRefresh" class="btn btn-info pull-right" ng-click="refresh_data()">Refresh</button>
         </div>
     </div>
     
     <hr />
+    
+    <div ng-hide="loaded" class="alert alert-info" role="alert"><strong> Welcome to StockSearch! </strong><i class="fa fa-database"></i><ul class="info"><li>Home - current data for all 3033 nasdaq stocks via tha yahoo finance API</li><li>Watchlist - track your favorite stocks (under developement)</li><li>Query - complete historical data for and nasdaq stock</li></ul><strong>Tips <i class="fa fa-lightbulb-o"></i></strong><ul class="info"><li>Click on any stock on the home screen to be automatically redirected to its query page (must load data first) </li></ul></div>
      
     <progressbar max="max" ng-show="loading" value="dynamic" type="success"></progressbar>
  

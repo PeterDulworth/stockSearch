@@ -10,6 +10,7 @@ angular.module('stockSearch').controller('queryController', ['$scope', '$http', 
     $scope.endYear = '';
     $scope.endMonth = '';
     $scope.endDay = '';
+    $scope.loaded = false;
     $scope.dynamic = 0; // progress bar position
     $scope.max = 3; // max progress bar length
     $scope.loading = 0; // tracks loading for gif
@@ -18,6 +19,8 @@ angular.module('stockSearch').controller('queryController', ['$scope', '$http', 
     $scope.responseJSON_date = [];
     $scope.responseJSON_hist = [];
     $scope.year_range = [];
+    $scope.zoomStart = '';
+    $scope.zoomEnd = '';
     $scope.subChart = true;
     $scope.data = [];
     $scope.data[0] = ['date', 'Price'];
@@ -70,9 +73,9 @@ angular.module('stockSearch').controller('queryController', ['$scope', '$http', 
     
     $scope.drawChart = function () {
         var n = 1;
-        for (var j = 0; j < $scope.responseJSON_hist.length; j++) {
+        for (let j = 0; j < $scope.responseJSON_hist.length; j++) {
             $scope.data[n] = [];
-            for (var k = 0; k < $scope.responseJSON_hist[j].length; k++) { 
+            for (let k = 0; k < $scope.responseJSON_hist[j].length; k++) { 
                 $scope.data[n] = [];
                 $scope.data[n][0] = $scope.responseJSON_hist[j][k].Date;
                 $scope.data[n][1] = $scope.responseJSON_hist[j][k].High;
@@ -97,7 +100,7 @@ angular.module('stockSearch').controller('queryController', ['$scope', '$http', 
                 },
                 y: {
                     label: {
-                        text: 'Price',
+                        text: 'Price [USD]',
                         position: 'outer-middle'
                     }
                 }
@@ -138,12 +141,12 @@ angular.module('stockSearch').controller('queryController', ['$scope', '$http', 
     
     $scope.zoom = function () {
         $scope.chart.zoom.enable(true);
-        $scope.chart.zoom(['2012-01-01', '2013-01-01']);  
+        $scope.chart.zoom([$scope.zoomStart, $scope.zoomEnd]);  
     };
     
     $scope.unzoom = function () {
-        $scope.subChart = false;
         $scope.chart.unzoom();
+        $scope.chart.zoom.enable(false);
     };
     
     $scope.repaint = function (canvas, brush) {
@@ -180,6 +183,7 @@ angular.module('stockSearch').controller('queryController', ['$scope', '$http', 
         
         $scope.reset_data();
         $scope.out = '<div class="row"><div class="col-xs-11 col-xs-offset-1"><h1 class="pink_header">' + $scope.formattedStockName() + '<div class="pull-right"><button type="submit" class="btn btn-success" ng-click="zoom()"><i class="fa fa-search-plus"></i></button>&nbsp;<button type="submit" class="btn btn-danger" ng-click="unzoom()"><i class="fa fa-search-minus"></i></button></div></h1></div></div>';
+        $scope.loaded = true;
         $scope.printResults();
         $scope.loading = 3; 
         document.getElementById("chart").style.visibility = 'hidden';
@@ -197,6 +201,12 @@ angular.module('stockSearch').controller('queryController', ['$scope', '$http', 
                 $scope.endDay = $scope.getDay();
                 $scope.endDate = $scope.endYear + "-" + $scope.endMonth + "-" + $scope.endDay;
                 $scope.yearGap = parseInt($scope.endYear) - parseInt($scope.startYear);
+                $scope.zoomStart = parseInt($scope.startYear) + parseInt((Math.round($scope.yearGap/2)));
+                $scope.zoomEnd = parseInt($scope.zoomStart) + 1;
+                console.log('Zoom start: ' + $scope.zoomStart + ', ' + $scope.zoomEnd);
+                $scope.zoomStart = String($scope.zoomStart) + '-01-01';
+                $scope.zoomEnd = String($scope.zoomEnd) + '-01-01';
+                console.log('Zoom start: ' + $scope.zoomStart + ', ' + $scope.zoomEnd);
                 console.log($scope.startYear);
                 console.log($scope.endYear);
                 console.log($scope.yearGap);
